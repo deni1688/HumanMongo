@@ -19,7 +19,7 @@ func GetCollection(client *mongo.Client, dbName string, collection string) *Coll
 
 // FindAll sets the slice of the given result param or returns an error. Internally it uses the cursor.All method to assign the results.
 // It also sets and tears down the context (as TODO)
-func (c *Collection) FindAll(query interface{}, result *[]interface{}, opts ...*options.FindOptions) error {
+func (c *Collection) FindAll(query interface{}, result interface{}, opts ...*options.FindOptions) error {
 	ctx := context.TODO()
 	defer ctx.Done()
 
