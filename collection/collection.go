@@ -12,6 +12,11 @@ type Collection struct {
 	*mongo.Collection
 }
 
+// GetCollection returns new HumanMongo Collection
+func GetCollection(client *mongo.Client, dbName string, collection string) *Collection {
+	return &Collection{client.Database(dbName).Collection(collection)}
+}
+
 // FindAll sets the slice of the given result param or returns an error. Internally it uses the cursor.All method to assign the results.
 // It also sets and tears down the context (as TODO)
 func (c *Collection) FindAll(query interface{}, result *[]interface{}, opts ...*options.FindOptions) error {
