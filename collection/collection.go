@@ -1,4 +1,4 @@
-package humanmongo
+package collection
 
 import (
 	"context"

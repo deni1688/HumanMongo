@@ -1,4 +1,4 @@
-module humanmongo
+module github.com/deni1688/humanmongo
 
 go 1.12
 
