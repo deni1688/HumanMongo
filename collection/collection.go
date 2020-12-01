@@ -10,17 +10,31 @@ import (
 // Collection wrapper around mongo driver collection
 type Collection struct {
 	*mongo.Collection
+	ctx context.Context
 }
 
-// GetCollection returns new HumanMongo Collection
+// GetCollection initializes the collection using the passed in client, db name, and colleciton name then returns new HumanMongo Collection pointer
 func GetCollection(client *mongo.Client, dbName string, collection string) *Collection {
-	return &Collection{client.Database(dbName).Collection(collection)}
+	return &Collection{client.Database(dbName).Collection(collection), nil}
+}
+
+// Ctx Allows the setting of a custom context when needed and return a pointer to the collection
+func (c *Collection) Ctx(ctx context.Context) *Collection {
+	c.ctx = ctx
+	return c
 }
 
 // FindAll sets the slice of the given result param or returns an error. Internally it uses the cursor.All method to assign the results.
-// It also sets and tears down the context (as TODO)
+// It also sets and tears down the context (as Background)
 func (c *Collection) FindAll(query interface{}, result interface{}, opts ...*options.FindOptions) error {
-	ctx := context.TODO()
+	var ctx context.Context
+
+	if c.ctx != nil {
+		ctx = c.ctx
+	} else {
+		ctx = context.Background()
+	}
+
 	defer ctx.Done()
 
 	cur, err := c.Find(ctx, query, opts...)
@@ -30,7 +44,5 @@ func (c *Collection) FindAll(query interface{}, result interface{}, opts ...*opt
 		return err
 	}
 
-	err = cur.All(ctx, result)
-
-	return nil
+	return cur.All(ctx, result)
 }
