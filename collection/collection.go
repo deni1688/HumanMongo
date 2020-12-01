@@ -3,6 +3,7 @@ package collection
 import (
 	"context"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -45,4 +46,17 @@ func (c *Collection) FindAll(query interface{}, result interface{}, opts ...*opt
 	}
 
 	return cur.All(ctx, result)
+}
+
+// JSONToBSON converts json to a bson.M object
+func JSONToBSON(data string) (bson.M, error) {
+	d := []byte(data)
+
+	var bsonData bson.M
+	err := bson.UnmarshalExtJSON(d, true, &bsonData)
+	if err != nil {
+		return nil, err
+	}
+
+	return bsonData, nil
 }
