@@ -34,7 +34,6 @@ func (c *Collection) FindAll(query interface{}, result interface{}, opts ...*opt
 	} else {
 		ctx = context.Background()
 	}
-
 	defer ctx.Done()
 
 	cur, err := c.Find(ctx, query, opts...)
